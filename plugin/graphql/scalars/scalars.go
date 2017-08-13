@@ -112,6 +112,36 @@ var Timestamp *graphql.Scalar = graphql.NewScalar(graphql.ScalarConfig{
 	},
 })
 
+var DateTime *graphql.Scalar = graphql.NewScalar(graphql.ScalarConfig{
+	Name: "DateTime",
+	Serialize: func(value interface{}) interface{} {
+		switch value := value.(type) {
+		case time.Time:
+			return value.UTC().Format(time.RFC3339)
+		case int:
+			return time.Unix(value, 0).UTC().Format(time.RFC3339)
+		}
+		return "0001-01-01T00:00:00Z"
+	},
+	ParseValue: func(value interface{}) interface{} {
+		switch tvalue := value.(type) {
+		case string:
+			if tval, err := time.Parse(time.RFC3339, tvalue); err != nil {
+				return nil
+			}
+			return tval
+		}
+		return nil
+	},
+	ParseLiteral: func(valueAST ast.Value) interface{} {
+		switch valueAST := valueAST.(type) {
+		case *ast.StringValue:
+			return valueAST.Value
+		}
+		return nil
+	},
+})
+
 func coerceMap(value interface{}) interface{} {
 	return value
 }

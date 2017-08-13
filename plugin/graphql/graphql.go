@@ -55,7 +55,7 @@ func (p *graphql) Generate(file *generator.FileDescriptor) {
 	}
 
 	graphQLPkg := p.NewImport("github.com/graphql-go/graphql")
-	schemaPkg := p.NewImport("github.com/opsee/protobuf/plugin/graphql/scalars")
+	schemaPkg := p.NewImport("github.com/vaniila/protobuf/plugin/graphql/scalars")
 	fmtPkg := p.NewImport("fmt")
 
 	for mi, message := range file.Messages() {
@@ -279,7 +279,7 @@ func (p *graphql) graphQLType(message *generator.Descriptor, field *descriptor.F
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 		mobj := p.ObjectNamed(field.GetTypeName())
 		if gogoproto.IsStdTime(field) {
-			gqltype = fmt.Sprint(schemaPkgName.Use(), ".", "Timestamp")
+			gqltype = fmt.Sprint(schemaPkgName.Use(), ".", "DateTime")
 			break
 		}
 		if strings.HasPrefix(mobj.PackageName(), types) {
