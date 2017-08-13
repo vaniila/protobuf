@@ -3,6 +3,7 @@ package graphql
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"unicode"
@@ -288,7 +289,7 @@ func (p *graphql) graphQLType(message *generator.Descriptor, field *descriptor.F
 	case descriptor.FieldDescriptorProto_TYPE_BYTES:
 		gqltype = fmt.Sprint(schemaPkgName.Use(), ".", "ByteString")
 	default:
-		panic("unknown proto field type")
+		log.Panic("unknown proto field type", field.GetType())
 	}
 
 	if field.IsRepeated() && !p.IsMap(field) {
