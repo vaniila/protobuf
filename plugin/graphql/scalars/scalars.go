@@ -128,8 +128,7 @@ var DateTime *graphql.Scalar = graphql.NewScalar(graphql.ScalarConfig{
 	ParseValue: func(value interface{}) interface{} {
 		switch tvalue := value.(type) {
 		case string:
-			tval, err := time.Parse(time.RFC3339, tvalue)
-			if err == nil {
+			if tval, err := time.Parse(time.RFC3339, tvalue); err == nil {
 				return tval.UTC()
 			}
 		case int:
