@@ -119,6 +119,8 @@ var DateTime *graphql.Scalar = graphql.NewScalar(graphql.ScalarConfig{
 		case time.Time:
 			return value.UTC().Format(time.RFC3339)
 		case int:
+			return time.Unix(int64(value), 0).UTC().Format(time.RFC3339)
+		case int64:
 			return time.Unix(value, 0).UTC().Format(time.RFC3339)
 		}
 		return "0001-01-01T00:00:00Z"
@@ -126,12 +128,16 @@ var DateTime *graphql.Scalar = graphql.NewScalar(graphql.ScalarConfig{
 	ParseValue: func(value interface{}) interface{} {
 		switch tvalue := value.(type) {
 		case string:
-			if tval, err := time.Parse(time.RFC3339, tvalue); err != nil {
-				return nil
+			tval, err := time.Parse(time.RFC3339, tvalue)
+			if err == nil {
+				return tval.UTC()
 			}
-			return tval
+		case int:
+			return time.Unix(int64(tvalue), 0).UTC()
+		case int64:
+			return time.Unix(tvalue, 0).UTC()
 		}
-		return nil
+		return time.Time{}
 	},
 	ParseLiteral: func(valueAST ast.Value) interface{} {
 		switch valueAST := valueAST.(type) {
