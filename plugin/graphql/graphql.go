@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 
 	"github.com/vaniila/protobuf/gogoproto"
 	"github.com/vaniila/protobuf/protoc-gen-gogo/descriptor"
@@ -157,7 +158,7 @@ func (p *graphql) Generate(file *generator.FileDescriptor) {
 		messageGQL := p.comment(fmt.Sprintf("4,%d", mi))
 		ccTypeName := generator.CamelCaseSlice(message.TypeName())
 
-		p.P(p.graphQLTypeMessageName(message), ` = `, graphQLPkg.Use(), `.NewObject(`, graphQLPkg.Use(), `.ObjectConfig{`)
+		p.P(p.graphQLTypeVarName(message), ` = `, graphQLPkg.Use(), `.NewObject(`, graphQLPkg.Use(), `.ObjectConfig{`)
 		p.In()
 		p.P(`Name:        "`, p.graphQLTypeFieldName(message), `",`)
 		p.P(`Description: `, messageGQL, `,`)
@@ -351,10 +352,6 @@ func (p *graphql) comment(path string) string {
 }
 
 func (p *graphql) graphQLTypeVarName(obj generator.Object) string {
-	return fmt.Sprint(p.DefaultPackageName(obj), "GraphQL", generator.CamelCaseSlice(obj.TypeName()), "Type")
-}
-
-func (p *graphql) graphQLTypeMessageName(obj generator.Object) string {
 	return fmt.Sprint(p.DefaultPackageName(obj), "GraphQL", generator.CamelCaseSlice(obj.TypeName()))
 }
 
@@ -383,6 +380,10 @@ func (p *graphql) camelCaseSlice(words []string) string {
 		} else {
 			result += word
 		}
+	}
+	if len(result) > 0 {
+		r, n := utf8.DecodeRuneInString(result)
+		return string(unicode.ToLower(r)) + result[n:]
 	}
 	return result
 }
