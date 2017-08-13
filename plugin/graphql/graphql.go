@@ -15,6 +15,48 @@ import (
 
 const types = "types"
 
+var commonInitialisms = map[string]bool{
+	"ACL":   true,
+	"API":   true,
+	"ASCII": true,
+	"CPU":   true,
+	"CSS":   true,
+	"DNS":   true,
+	"EOF":   true,
+	"GUID":  true,
+	"HTML":  true,
+	"HTTP":  true,
+	"HTTPS": true,
+	"ID":    true,
+	"IP":    true,
+	"JSON":  true,
+	"LHS":   true,
+	"OS":    true,
+	"QPS":   true,
+	"RAM":   true,
+	"RHS":   true,
+	"RPC":   true,
+	"SLA":   true,
+	"SMTP":  true,
+	"SQL":   true,
+	"SSH":   true,
+	"TCP":   true,
+	"TLS":   true,
+	"TTL":   true,
+	"UDP":   true,
+	"UI":    true,
+	"UID":   true,
+	"UUID":  true,
+	"URI":   true,
+	"URL":   true,
+	"UTF8":  true,
+	"VM":    true,
+	"XML":   true,
+	"XMPP":  true,
+	"XSRF":  true,
+	"XSS":   true,
+}
+
 type graphql struct {
 	*generator.Generator
 	generator.PluginImports
@@ -115,9 +157,9 @@ func (p *graphql) Generate(file *generator.FileDescriptor) {
 		messageGQL := p.comment(fmt.Sprintf("4,%d", mi))
 		ccTypeName := generator.CamelCaseSlice(message.TypeName())
 
-		p.P(p.graphQLTypeVarName(message), ` = `, graphQLPkg.Use(), `.NewObject(`, graphQLPkg.Use(), `.ObjectConfig{`)
+		p.P(p.graphQLTypeMessageName(message), ` = `, graphQLPkg.Use(), `.NewObject(`, graphQLPkg.Use(), `.ObjectConfig{`)
 		p.In()
-		p.P(`Name:        "`, p.TypeNameWithPackage(message), `",`)
+		p.P(`Name:        "`, p.graphQLTypeFieldName(message), `",`)
 		p.P(`Description: `, messageGQL, `,`)
 		p.P(`Fields: (`, graphQLPkg.Use(), `.FieldsThunk)(func() `, graphQLPkg.Use(), `.Fields {`)
 		p.In()
@@ -135,7 +177,7 @@ func (p *graphql) Generate(file *generator.FileDescriptor) {
 				hasStar  = strings.Index(gtype, "*") == 0
 			)
 
-			p.P(`"`, field.GetName(), `": &`, graphQLPkg.Use(), `.Field{`)
+			p.P(`"`, p.camelCase(field.GetName()), `": &`, graphQLPkg.Use(), `.Field{`)
 			p.In()
 			p.P(`Type:        `, p.graphQLType(message, field, graphQLPkg, schemaPkg), `,`)
 			p.P(`Description: `, fieldGQL, `,`)
@@ -181,7 +223,7 @@ func (p *graphql) Generate(file *generator.FileDescriptor) {
 
 			p.Out()
 			p.P(`}`)
-			p.P(`return nil, `, fmtPkg.Use(), `.Errorf("field `, field.GetName(), ` not resolved")`)
+			p.P(`return nil, `, fmtPkg.Use(), `.Errorf("field `, p.camelCase(field.GetName()), ` not resolved")`)
 			p.Out()
 			p.P(`},`)
 			p.Out()
@@ -310,6 +352,39 @@ func (p *graphql) comment(path string) string {
 
 func (p *graphql) graphQLTypeVarName(obj generator.Object) string {
 	return fmt.Sprint(p.DefaultPackageName(obj), "GraphQL", generator.CamelCaseSlice(obj.TypeName()), "Type")
+}
+
+func (p *graphql) graphQLTypeMessageName(obj generator.Object) string {
+	return fmt.Sprint(p.DefaultPackageName(obj), "GraphQL", generator.CamelCaseSlice(obj.TypeName()))
+}
+
+func (p *graphql) graphQLTypeFieldName(obj generator.Object) string {
+	return p.camelCaseSlice(obj.TypeName())
+}
+
+func (p *graphql) camelCase(s string) string {
+	words := strings.Split(s, "_")
+	return p.camelCaseSlice(words)
+}
+
+func (p *graphql) camelCaseSlice(words []string) string {
+	var result string
+	for i, word := range words {
+		if i > 0 {
+			if upper := strings.ToUpper(word); commonInitialisms[upper] {
+				result += upper
+				continue
+			}
+		}
+		if i > 0 && len(word) > 0 {
+			w := []rune(word)
+			w[0] = unicode.ToUpper(w[0])
+			result += string(w)
+		} else {
+			result += word
+		}
+	}
+	return result
 }
 
 func graphQLUnionName(message *generator.Descriptor, oneof *descriptor.OneofDescriptorProto) string {
