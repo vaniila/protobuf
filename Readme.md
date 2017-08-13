@@ -44,7 +44,7 @@ These projects use gogoprotobuf:
   - <a href="https://github.com/src-d/proteus">proteus</a>
   - <a href="https://github.com/go-graphite">carbonzipper stack</a>
   - <a href="https://sendgrid.com/">SendGrid</a>
-  
+
 Please let us know if you are using gogoprotobuf by posting on our <a href="https://groups.google.com/forum/#!topic/gogoprotobuf/Brw76BxmFpQ">GoogleGroup</a>.
 
 ### Mentioned
@@ -73,13 +73,13 @@ Most versions from 2.3.1 should not give any problems, but 2.6.1, 3.0.2 and 3.3.
 
 Install the protoc-gen-gofast binary
 
-    go get github.com/gogo/protobuf/protoc-gen-gofast
+    go get github.com/vaniila/protobuf/protoc-gen-gofast
 
 Use it to generate faster marshaling and unmarshaling go code for your protocol buffers.
 
     protoc --gofast_out=. myproto.proto
 
-This does not allow you to use any of the other gogoprotobuf [extensions](https://github.com/gogo/protobuf/blob/master/extensions.md).
+This does not allow you to use any of the other gogoprotobuf [extensions](https://github.com/vaniila/protobuf/blob/master/extensions.md).
 
 ### More Speed and more generated code
 
@@ -94,25 +94,25 @@ Other binaries are also included:
 
 Installing any of these binaries is easy.  Simply run:
 
-    go get github.com/gogo/protobuf/proto
-    go get github.com/gogo/protobuf/{binary}
-    go get github.com/gogo/protobuf/gogoproto
+    go get github.com/vaniila/protobuf/proto
+    go get github.com/vaniila/protobuf/{binary}
+    go get github.com/vaniila/protobuf/gogoproto
 
-These binaries allow you to using gogoprotobuf [extensions](https://github.com/gogo/protobuf/blob/master/extensions.md).
+These binaries allow you to using gogoprotobuf [extensions](https://github.com/vaniila/protobuf/blob/master/extensions.md).
 
 ### Most Speed and most customization
 
 Customizing the fields of the messages to be the fields that you actually want to use removes the need to copy between the structs you use and structs you use to serialize.
 gogoprotobuf also offers more serialization formats and generation of tests and even more methods.
 
-Please visit the [extensions](https://github.com/gogo/protobuf/blob/master/extensions.md) page for more documentation.
+Please visit the [extensions](https://github.com/vaniila/protobuf/blob/master/extensions.md) page for more documentation.
 
 Install protoc-gen-gogo:
 
-    go get github.com/gogo/protobuf/proto
-    go get github.com/gogo/protobuf/jsonpb
-    go get github.com/gogo/protobuf/protoc-gen-gogo
-    go get github.com/gogo/protobuf/gogoproto
+    go get github.com/vaniila/protobuf/proto
+    go get github.com/vaniila/protobuf/jsonpb
+    go get github.com/vaniila/protobuf/protoc-gen-gogo
+    go get github.com/vaniila/protobuf/gogoproto
 
 ## GRPC
 

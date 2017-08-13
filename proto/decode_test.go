@@ -36,8 +36,8 @@ package proto_test
 import (
 	"testing"
 
-	"github.com/gogo/protobuf/proto"
-	tpb "github.com/gogo/protobuf/proto/proto3_proto"
+	"github.com/vaniila/protobuf/proto"
+	tpb "github.com/vaniila/protobuf/proto/proto3_proto"
 )
 
 var (

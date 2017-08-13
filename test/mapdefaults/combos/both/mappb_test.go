@@ -17,13 +17,13 @@ package mapdefaults
 import testing "testing"
 import math_rand "math/rand"
 import time "time"
-import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
-import github_com_gogo_protobuf_jsonpb "github.com/gogo/protobuf/jsonpb"
+import github_com_vaniila_protobuf_proto "github.com/vaniila/protobuf/proto"
+import github_com_vaniila_protobuf_jsonpb "github.com/vaniila/protobuf/jsonpb"
 import fmt "fmt"
 import go_parser "go/parser"
-import proto "github.com/gogo/protobuf/proto"
+import proto "github.com/vaniila/protobuf/proto"
 import math "math"
-import _ "github.com/gogo/protobuf/gogoproto"
+import _ "github.com/vaniila/protobuf/gogoproto"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -34,12 +34,12 @@ func TestMapTestProto(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedMapTest(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &MapTest{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	littlefuzz := make([]byte, len(dAtA))
@@ -60,7 +60,7 @@ func TestMapTestProto(t *testing.T) {
 			littlefuzz = append(littlefuzz, byte(popr.Intn(256)))
 		}
 		// shouldn't panic
-		_ = github_com_gogo_protobuf_proto.Unmarshal(littlefuzz, msg)
+		_ = github_com_vaniila_protobuf_proto.Unmarshal(littlefuzz, msg)
 	}
 }
 
@@ -78,7 +78,7 @@ func TestMapTestMarshalTo(t *testing.T) {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &MapTest{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	for i := range dAtA {
@@ -96,12 +96,12 @@ func TestFakeMapProto(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedFakeMap(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &FakeMap{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	littlefuzz := make([]byte, len(dAtA))
@@ -122,7 +122,7 @@ func TestFakeMapProto(t *testing.T) {
 			littlefuzz = append(littlefuzz, byte(popr.Intn(256)))
 		}
 		// shouldn't panic
-		_ = github_com_gogo_protobuf_proto.Unmarshal(littlefuzz, msg)
+		_ = github_com_vaniila_protobuf_proto.Unmarshal(littlefuzz, msg)
 	}
 }
 
@@ -140,7 +140,7 @@ func TestFakeMapMarshalTo(t *testing.T) {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &FakeMap{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	for i := range dAtA {
@@ -158,12 +158,12 @@ func TestFakeMapEntryProto(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedFakeMapEntry(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &FakeMapEntry{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	littlefuzz := make([]byte, len(dAtA))
@@ -184,7 +184,7 @@ func TestFakeMapEntryProto(t *testing.T) {
 			littlefuzz = append(littlefuzz, byte(popr.Intn(256)))
 		}
 		// shouldn't panic
-		_ = github_com_gogo_protobuf_proto.Unmarshal(littlefuzz, msg)
+		_ = github_com_vaniila_protobuf_proto.Unmarshal(littlefuzz, msg)
 	}
 }
 
@@ -202,7 +202,7 @@ func TestFakeMapEntryMarshalTo(t *testing.T) {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &FakeMapEntry{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	for i := range dAtA {
@@ -220,13 +220,13 @@ func TestMapTestJSON(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedMapTest(popr, true)
-	marshaler := github_com_gogo_protobuf_jsonpb.Marshaler{}
+	marshaler := github_com_vaniila_protobuf_jsonpb.Marshaler{}
 	jsondata, err := marshaler.MarshalToString(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &MapTest{}
-	err = github_com_gogo_protobuf_jsonpb.UnmarshalString(jsondata, msg)
+	err = github_com_vaniila_protobuf_jsonpb.UnmarshalString(jsondata, msg)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -241,13 +241,13 @@ func TestFakeMapJSON(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedFakeMap(popr, true)
-	marshaler := github_com_gogo_protobuf_jsonpb.Marshaler{}
+	marshaler := github_com_vaniila_protobuf_jsonpb.Marshaler{}
 	jsondata, err := marshaler.MarshalToString(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &FakeMap{}
-	err = github_com_gogo_protobuf_jsonpb.UnmarshalString(jsondata, msg)
+	err = github_com_vaniila_protobuf_jsonpb.UnmarshalString(jsondata, msg)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -262,13 +262,13 @@ func TestFakeMapEntryJSON(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedFakeMapEntry(popr, true)
-	marshaler := github_com_gogo_protobuf_jsonpb.Marshaler{}
+	marshaler := github_com_vaniila_protobuf_jsonpb.Marshaler{}
 	jsondata, err := marshaler.MarshalToString(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &FakeMapEntry{}
-	err = github_com_gogo_protobuf_jsonpb.UnmarshalString(jsondata, msg)
+	err = github_com_vaniila_protobuf_jsonpb.UnmarshalString(jsondata, msg)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -283,9 +283,9 @@ func TestMapTestProtoText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedMapTest(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.MarshalTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.MarshalTextString(p)
 	msg := &MapTest{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -300,9 +300,9 @@ func TestMapTestProtoCompactText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedMapTest(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.CompactTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.CompactTextString(p)
 	msg := &MapTest{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -317,9 +317,9 @@ func TestFakeMapProtoText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedFakeMap(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.MarshalTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.MarshalTextString(p)
 	msg := &FakeMap{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -334,9 +334,9 @@ func TestFakeMapProtoCompactText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedFakeMap(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.CompactTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.CompactTextString(p)
 	msg := &FakeMap{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -351,9 +351,9 @@ func TestFakeMapEntryProtoText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedFakeMapEntry(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.MarshalTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.MarshalTextString(p)
 	msg := &FakeMapEntry{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -368,9 +368,9 @@ func TestFakeMapEntryProtoCompactText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedFakeMapEntry(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.CompactTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.CompactTextString(p)
 	msg := &FakeMapEntry{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -387,12 +387,12 @@ func TestMapDescription(t *testing.T) {
 func TestMapTestVerboseEqual(t *testing.T) {
 	popr := math_rand.New(math_rand.NewSource(time.Now().UnixNano()))
 	p := NewPopulatedMapTest(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		panic(err)
 	}
 	msg := &MapTest{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		panic(err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -402,12 +402,12 @@ func TestMapTestVerboseEqual(t *testing.T) {
 func TestFakeMapVerboseEqual(t *testing.T) {
 	popr := math_rand.New(math_rand.NewSource(time.Now().UnixNano()))
 	p := NewPopulatedFakeMap(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		panic(err)
 	}
 	msg := &FakeMap{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		panic(err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -417,12 +417,12 @@ func TestFakeMapVerboseEqual(t *testing.T) {
 func TestFakeMapEntryVerboseEqual(t *testing.T) {
 	popr := math_rand.New(math_rand.NewSource(time.Now().UnixNano()))
 	p := NewPopulatedFakeMapEntry(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		panic(err)
 	}
 	msg := &FakeMapEntry{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		panic(err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -472,8 +472,8 @@ func TestMapTestSize(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedMapTest(popr, true)
-	size2 := github_com_gogo_protobuf_proto.Size(p)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	size2 := github_com_vaniila_protobuf_proto.Size(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -484,7 +484,7 @@ func TestMapTestSize(t *testing.T) {
 	if size2 != size {
 		t.Errorf("seed = %d, size %v != before marshal proto.Size %v", seed, size, size2)
 	}
-	size3 := github_com_gogo_protobuf_proto.Size(p)
+	size3 := github_com_vaniila_protobuf_proto.Size(p)
 	if size3 != size {
 		t.Errorf("seed = %d, size %v != after marshal proto.Size %v", seed, size, size3)
 	}
@@ -494,8 +494,8 @@ func TestFakeMapSize(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedFakeMap(popr, true)
-	size2 := github_com_gogo_protobuf_proto.Size(p)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	size2 := github_com_vaniila_protobuf_proto.Size(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -506,7 +506,7 @@ func TestFakeMapSize(t *testing.T) {
 	if size2 != size {
 		t.Errorf("seed = %d, size %v != before marshal proto.Size %v", seed, size, size2)
 	}
-	size3 := github_com_gogo_protobuf_proto.Size(p)
+	size3 := github_com_vaniila_protobuf_proto.Size(p)
 	if size3 != size {
 		t.Errorf("seed = %d, size %v != after marshal proto.Size %v", seed, size, size3)
 	}
@@ -516,8 +516,8 @@ func TestFakeMapEntrySize(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedFakeMapEntry(popr, true)
-	size2 := github_com_gogo_protobuf_proto.Size(p)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	size2 := github_com_vaniila_protobuf_proto.Size(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -528,7 +528,7 @@ func TestFakeMapEntrySize(t *testing.T) {
 	if size2 != size {
 		t.Errorf("seed = %d, size %v != before marshal proto.Size %v", seed, size, size2)
 	}
-	size3 := github_com_gogo_protobuf_proto.Size(p)
+	size3 := github_com_vaniila_protobuf_proto.Size(p)
 	if size3 != size {
 		t.Errorf("seed = %d, size %v != after marshal proto.Size %v", seed, size, size3)
 	}
@@ -562,4 +562,4 @@ func TestFakeMapEntryStringer(t *testing.T) {
 	}
 }
 
-//These tests are generated by github.com/gogo/protobuf/plugin/testgen
+//These tests are generated by github.com/vaniila/protobuf/plugin/testgen

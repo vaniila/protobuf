@@ -1,7 +1,7 @@
 URL="https://raw.githubusercontent.com/google/protobuf/master/src/google/protobuf/"
 
 update:
-	go install github.com/gogo/protobuf/gogoreplace
+	go install github.com/vaniila/protobuf/gogoreplace
 
 	(cd ./google/protobuf && rm descriptor.proto; wget ${URL}/descriptor.proto)
 	# gogoprotobuf requires users to import gogo.proto which imports descriptor.proto
@@ -16,7 +16,7 @@ update:
 
 	(cd ./google/protobuf/compiler && rm plugin.proto; wget ${URL}/compiler/plugin.proto)
 	gogoreplace 'option go_package = "github.com/golang/protobuf/protoc-gen-go/plugin;plugin_go";' 'option go_package = "plugin_go";' ./google/protobuf/compiler/plugin.proto
-	
+
 	(cd ./google/protobuf && rm any.proto; wget ${URL}/any.proto)
 	gogoreplace 'go_package = "github.com/golang/protobuf/ptypes/any";' 'go_package = "types";' ./google/protobuf/any.proto
 	(cd ./google/protobuf && rm empty.proto; wget ${URL}/empty.proto)
@@ -31,5 +31,5 @@ update:
 	gogoreplace 'go_package = "github.com/golang/protobuf/ptypes/wrappers";' 'go_package = "types";' ./google/protobuf/wrappers.proto
 	(cd ./google/protobuf && rm field_mask.proto; wget ${URL}/field_mask.proto)
 	gogoreplace 'option go_package = "google.golang.org/genproto/protobuf/field_mask;field_mask";' 'option go_package = "types";' ./google/protobuf/field_mask.proto
-	
-	
+
+

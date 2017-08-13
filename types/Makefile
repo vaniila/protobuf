@@ -1,7 +1,7 @@
 # Protocol Buffers for Go with Gadgets
 #
 # Copyright (c) 2016, The GoGo Authors. All rights reserved.
-# http://github.com/gogo/protobuf
+# http://github.com/vaniila/protobuf
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -27,8 +27,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 regenerate:
-	go install github.com/gogo/protobuf/protoc-gen-gogotypes
-	go install github.com/gogo/protobuf/protoc-min-version
+	go install github.com/vaniila/protobuf/protoc-gen-gogotypes
+	go install github.com/vaniila/protobuf/protoc-min-version
 
 	protoc-min-version --version="3.0.0" --gogotypes_out=. -I=../protobuf/google/protobuf ../protobuf/google/protobuf/any.proto
 	protoc-min-version --version="3.0.0" --gogotypes_out=. -I=../protobuf/google/protobuf ../protobuf/google/protobuf/empty.proto
@@ -37,3 +37,5 @@ regenerate:
 	protoc-min-version --version="3.0.0" --gogotypes_out=. -I=../protobuf/google/protobuf ../protobuf/google/protobuf/struct.proto
 	protoc-min-version --version="3.0.0" --gogotypes_out=. -I=../protobuf/google/protobuf ../protobuf/google/protobuf/wrappers.proto
 	protoc-min-version --version="3.0.0" --gogotypes_out=. -I=../protobuf/google/protobuf ../protobuf/google/protobuf/field_mask.proto
+	protoc-min-version --version="3.0.0" --gogotypes_out=. -I=../protobuf/google/protobuf ../protobuf/google/protobuf/error.proto
+	protoc-min-version --version="3.0.0" --gogotypes_out=. -I=../protobuf/google/protobuf ../protobuf/google/protobuf/permission.proto

@@ -16,11 +16,11 @@ It has these top-level messages:
 */
 package proto3_proto
 
-import proto "github.com/gogo/protobuf/proto"
+import proto "github.com/vaniila/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import google_protobuf "github.com/gogo/protobuf/types"
-import testdata "github.com/gogo/protobuf/proto/testdata"
+import google_protobuf "github.com/vaniila/protobuf/types"
+import testdata "github.com/vaniila/protobuf/proto/testdata"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal

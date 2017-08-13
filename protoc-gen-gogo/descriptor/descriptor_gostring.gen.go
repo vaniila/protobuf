@@ -33,11 +33,11 @@ package descriptor
 
 import fmt "fmt"
 import strings "strings"
-import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
+import github_com_vaniila_protobuf_proto "github.com/vaniila/protobuf/proto"
 import sort "sort"
 import strconv "strconv"
 import reflect "reflect"
-import proto "github.com/gogo/protobuf/proto"
+import proto "github.com/vaniila/protobuf/proto"
 import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -343,7 +343,7 @@ func (this *FileOptions) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := make([]string, 0, 21)
+	s := make([]string, 0, 23)
 	s = append(s, "&descriptor.FileOptions{")
 	if this.JavaPackage != nil {
 		s = append(s, "JavaPackage: "+valueToGoStringDescriptor(this.JavaPackage, "string")+",\n")
@@ -375,6 +375,9 @@ func (this *FileOptions) GoString() string {
 	if this.PyGenericServices != nil {
 		s = append(s, "PyGenericServices: "+valueToGoStringDescriptor(this.PyGenericServices, "bool")+",\n")
 	}
+	if this.PhpGenericServices != nil {
+		s = append(s, "PhpGenericServices: "+valueToGoStringDescriptor(this.PhpGenericServices, "bool")+",\n")
+	}
 	if this.Deprecated != nil {
 		s = append(s, "Deprecated: "+valueToGoStringDescriptor(this.Deprecated, "bool")+",\n")
 	}
@@ -392,6 +395,9 @@ func (this *FileOptions) GoString() string {
 	}
 	if this.PhpClassPrefix != nil {
 		s = append(s, "PhpClassPrefix: "+valueToGoStringDescriptor(this.PhpClassPrefix, "string")+",\n")
+	}
+	if this.PhpNamespace != nil {
+		s = append(s, "PhpNamespace: "+valueToGoStringDescriptor(this.PhpNamespace, "string")+",\n")
 	}
 	if this.UninterpretedOption != nil {
 		s = append(s, "UninterpretedOption: "+fmt.Sprintf("%#v", this.UninterpretedOption)+",\n")
@@ -703,8 +709,8 @@ func valueToGoStringDescriptor(v interface{}, typ string) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("func(v %v) *%v { return &v } ( %#v )", typ, typ, pv)
 }
-func extensionToGoStringDescriptor(m github_com_gogo_protobuf_proto.Message) string {
-	e := github_com_gogo_protobuf_proto.GetUnsafeExtensionsMap(m)
+func extensionToGoStringDescriptor(m github_com_vaniila_protobuf_proto.Message) string {
+	e := github_com_vaniila_protobuf_proto.GetUnsafeExtensionsMap(m)
 	if e == nil {
 		return "nil"
 	}

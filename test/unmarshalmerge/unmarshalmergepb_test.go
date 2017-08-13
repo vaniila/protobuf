@@ -19,13 +19,13 @@ import testing "testing"
 import math_rand "math/rand"
 import time "time"
 import unsafe "unsafe"
-import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
-import github_com_gogo_protobuf_jsonpb "github.com/gogo/protobuf/jsonpb"
+import github_com_vaniila_protobuf_proto "github.com/vaniila/protobuf/proto"
+import github_com_vaniila_protobuf_jsonpb "github.com/vaniila/protobuf/jsonpb"
 import fmt "fmt"
 import go_parser "go/parser"
-import proto "github.com/gogo/protobuf/proto"
+import proto "github.com/vaniila/protobuf/proto"
 import math "math"
-import _ "github.com/gogo/protobuf/gogoproto"
+import _ "github.com/vaniila/protobuf/gogoproto"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -36,12 +36,12 @@ func TestBigProto(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedBig(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &Big{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	littlefuzz := make([]byte, len(dAtA))
@@ -62,7 +62,7 @@ func TestBigProto(t *testing.T) {
 			littlefuzz = append(littlefuzz, byte(popr.Intn(256)))
 		}
 		// shouldn't panic
-		_ = github_com_gogo_protobuf_proto.Unmarshal(littlefuzz, msg)
+		_ = github_com_vaniila_protobuf_proto.Unmarshal(littlefuzz, msg)
 	}
 }
 
@@ -75,7 +75,7 @@ func BenchmarkBigProtoMarshal(b *testing.B) {
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		dAtA, err := github_com_gogo_protobuf_proto.Marshal(pops[i%10000])
+		dAtA, err := github_com_vaniila_protobuf_proto.Marshal(pops[i%10000])
 		if err != nil {
 			panic(err)
 		}
@@ -89,7 +89,7 @@ func BenchmarkBigProtoUnmarshal(b *testing.B) {
 	total := 0
 	datas := make([][]byte, 10000)
 	for i := 0; i < 10000; i++ {
-		dAtA, err := github_com_gogo_protobuf_proto.Marshal(NewPopulatedBig(popr, false))
+		dAtA, err := github_com_vaniila_protobuf_proto.Marshal(NewPopulatedBig(popr, false))
 		if err != nil {
 			panic(err)
 		}
@@ -99,7 +99,7 @@ func BenchmarkBigProtoUnmarshal(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		total += len(datas[i%10000])
-		if err := github_com_gogo_protobuf_proto.Unmarshal(datas[i%10000], msg); err != nil {
+		if err := github_com_vaniila_protobuf_proto.Unmarshal(datas[i%10000], msg); err != nil {
 			panic(err)
 		}
 	}
@@ -114,12 +114,12 @@ func TestBigUnsafeProto(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedBigUnsafe(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &BigUnsafe{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	littlefuzz := make([]byte, len(dAtA))
@@ -140,7 +140,7 @@ func TestBigUnsafeProto(t *testing.T) {
 			littlefuzz = append(littlefuzz, byte(popr.Intn(256)))
 		}
 		// shouldn't panic
-		_ = github_com_gogo_protobuf_proto.Unmarshal(littlefuzz, msg)
+		_ = github_com_vaniila_protobuf_proto.Unmarshal(littlefuzz, msg)
 	}
 }
 
@@ -153,7 +153,7 @@ func BenchmarkBigUnsafeProtoMarshal(b *testing.B) {
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		dAtA, err := github_com_gogo_protobuf_proto.Marshal(pops[i%10000])
+		dAtA, err := github_com_vaniila_protobuf_proto.Marshal(pops[i%10000])
 		if err != nil {
 			panic(err)
 		}
@@ -167,7 +167,7 @@ func BenchmarkBigUnsafeProtoUnmarshal(b *testing.B) {
 	total := 0
 	datas := make([][]byte, 10000)
 	for i := 0; i < 10000; i++ {
-		dAtA, err := github_com_gogo_protobuf_proto.Marshal(NewPopulatedBigUnsafe(popr, false))
+		dAtA, err := github_com_vaniila_protobuf_proto.Marshal(NewPopulatedBigUnsafe(popr, false))
 		if err != nil {
 			panic(err)
 		}
@@ -177,7 +177,7 @@ func BenchmarkBigUnsafeProtoUnmarshal(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		total += len(datas[i%10000])
-		if err := github_com_gogo_protobuf_proto.Unmarshal(datas[i%10000], msg); err != nil {
+		if err := github_com_vaniila_protobuf_proto.Unmarshal(datas[i%10000], msg); err != nil {
 			panic(err)
 		}
 	}
@@ -188,12 +188,12 @@ func TestSubProto(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedSub(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &Sub{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	littlefuzz := make([]byte, len(dAtA))
@@ -214,7 +214,7 @@ func TestSubProto(t *testing.T) {
 			littlefuzz = append(littlefuzz, byte(popr.Intn(256)))
 		}
 		// shouldn't panic
-		_ = github_com_gogo_protobuf_proto.Unmarshal(littlefuzz, msg)
+		_ = github_com_vaniila_protobuf_proto.Unmarshal(littlefuzz, msg)
 	}
 }
 
@@ -227,7 +227,7 @@ func BenchmarkSubProtoMarshal(b *testing.B) {
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		dAtA, err := github_com_gogo_protobuf_proto.Marshal(pops[i%10000])
+		dAtA, err := github_com_vaniila_protobuf_proto.Marshal(pops[i%10000])
 		if err != nil {
 			panic(err)
 		}
@@ -241,7 +241,7 @@ func BenchmarkSubProtoUnmarshal(b *testing.B) {
 	total := 0
 	datas := make([][]byte, 10000)
 	for i := 0; i < 10000; i++ {
-		dAtA, err := github_com_gogo_protobuf_proto.Marshal(NewPopulatedSub(popr, false))
+		dAtA, err := github_com_vaniila_protobuf_proto.Marshal(NewPopulatedSub(popr, false))
 		if err != nil {
 			panic(err)
 		}
@@ -251,7 +251,7 @@ func BenchmarkSubProtoUnmarshal(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		total += len(datas[i%10000])
-		if err := github_com_gogo_protobuf_proto.Unmarshal(datas[i%10000], msg); err != nil {
+		if err := github_com_vaniila_protobuf_proto.Unmarshal(datas[i%10000], msg); err != nil {
 			panic(err)
 		}
 	}
@@ -262,12 +262,12 @@ func TestIntMergeProto(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedIntMerge(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &IntMerge{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	littlefuzz := make([]byte, len(dAtA))
@@ -288,7 +288,7 @@ func TestIntMergeProto(t *testing.T) {
 			littlefuzz = append(littlefuzz, byte(popr.Intn(256)))
 		}
 		// shouldn't panic
-		_ = github_com_gogo_protobuf_proto.Unmarshal(littlefuzz, msg)
+		_ = github_com_vaniila_protobuf_proto.Unmarshal(littlefuzz, msg)
 	}
 }
 
@@ -301,7 +301,7 @@ func BenchmarkIntMergeProtoMarshal(b *testing.B) {
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		dAtA, err := github_com_gogo_protobuf_proto.Marshal(pops[i%10000])
+		dAtA, err := github_com_vaniila_protobuf_proto.Marshal(pops[i%10000])
 		if err != nil {
 			panic(err)
 		}
@@ -315,7 +315,7 @@ func BenchmarkIntMergeProtoUnmarshal(b *testing.B) {
 	total := 0
 	datas := make([][]byte, 10000)
 	for i := 0; i < 10000; i++ {
-		dAtA, err := github_com_gogo_protobuf_proto.Marshal(NewPopulatedIntMerge(popr, false))
+		dAtA, err := github_com_vaniila_protobuf_proto.Marshal(NewPopulatedIntMerge(popr, false))
 		if err != nil {
 			panic(err)
 		}
@@ -325,7 +325,7 @@ func BenchmarkIntMergeProtoUnmarshal(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		total += len(datas[i%10000])
-		if err := github_com_gogo_protobuf_proto.Unmarshal(datas[i%10000], msg); err != nil {
+		if err := github_com_vaniila_protobuf_proto.Unmarshal(datas[i%10000], msg); err != nil {
 			panic(err)
 		}
 	}
@@ -336,13 +336,13 @@ func TestBigJSON(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedBig(popr, true)
-	marshaler := github_com_gogo_protobuf_jsonpb.Marshaler{}
+	marshaler := github_com_vaniila_protobuf_jsonpb.Marshaler{}
 	jsondata, err := marshaler.MarshalToString(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &Big{}
-	err = github_com_gogo_protobuf_jsonpb.UnmarshalString(jsondata, msg)
+	err = github_com_vaniila_protobuf_jsonpb.UnmarshalString(jsondata, msg)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -357,13 +357,13 @@ func TestBigUnsafeJSON(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedBigUnsafe(popr, true)
-	marshaler := github_com_gogo_protobuf_jsonpb.Marshaler{}
+	marshaler := github_com_vaniila_protobuf_jsonpb.Marshaler{}
 	jsondata, err := marshaler.MarshalToString(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &BigUnsafe{}
-	err = github_com_gogo_protobuf_jsonpb.UnmarshalString(jsondata, msg)
+	err = github_com_vaniila_protobuf_jsonpb.UnmarshalString(jsondata, msg)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -378,13 +378,13 @@ func TestSubJSON(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedSub(popr, true)
-	marshaler := github_com_gogo_protobuf_jsonpb.Marshaler{}
+	marshaler := github_com_vaniila_protobuf_jsonpb.Marshaler{}
 	jsondata, err := marshaler.MarshalToString(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &Sub{}
-	err = github_com_gogo_protobuf_jsonpb.UnmarshalString(jsondata, msg)
+	err = github_com_vaniila_protobuf_jsonpb.UnmarshalString(jsondata, msg)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -399,13 +399,13 @@ func TestIntMergeJSON(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedIntMerge(popr, true)
-	marshaler := github_com_gogo_protobuf_jsonpb.Marshaler{}
+	marshaler := github_com_vaniila_protobuf_jsonpb.Marshaler{}
 	jsondata, err := marshaler.MarshalToString(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	msg := &IntMerge{}
-	err = github_com_gogo_protobuf_jsonpb.UnmarshalString(jsondata, msg)
+	err = github_com_vaniila_protobuf_jsonpb.UnmarshalString(jsondata, msg)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -420,9 +420,9 @@ func TestBigProtoText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedBig(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.MarshalTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.MarshalTextString(p)
 	msg := &Big{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -437,9 +437,9 @@ func TestBigProtoCompactText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedBig(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.CompactTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.CompactTextString(p)
 	msg := &Big{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -454,9 +454,9 @@ func TestBigUnsafeProtoText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedBigUnsafe(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.MarshalTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.MarshalTextString(p)
 	msg := &BigUnsafe{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -471,9 +471,9 @@ func TestBigUnsafeProtoCompactText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedBigUnsafe(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.CompactTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.CompactTextString(p)
 	msg := &BigUnsafe{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -488,9 +488,9 @@ func TestSubProtoText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedSub(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.MarshalTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.MarshalTextString(p)
 	msg := &Sub{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -505,9 +505,9 @@ func TestSubProtoCompactText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedSub(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.CompactTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.CompactTextString(p)
 	msg := &Sub{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -522,9 +522,9 @@ func TestIntMergeProtoText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedIntMerge(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.MarshalTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.MarshalTextString(p)
 	msg := &IntMerge{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -539,9 +539,9 @@ func TestIntMergeProtoCompactText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
 	p := NewPopulatedIntMerge(popr, true)
-	dAtA := github_com_gogo_protobuf_proto.CompactTextString(p)
+	dAtA := github_com_vaniila_protobuf_proto.CompactTextString(p)
 	msg := &IntMerge{}
-	if err := github_com_gogo_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.UnmarshalText(dAtA, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -555,12 +555,12 @@ func TestIntMergeProtoCompactText(t *testing.T) {
 func TestBigVerboseEqual(t *testing.T) {
 	popr := math_rand.New(math_rand.NewSource(time.Now().UnixNano()))
 	p := NewPopulatedBig(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		panic(err)
 	}
 	msg := &Big{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		panic(err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -574,12 +574,12 @@ func TestBigUnsafeVerboseEqual(t *testing.T) {
 	}
 	popr := math_rand.New(math_rand.NewSource(time.Now().UnixNano()))
 	p := NewPopulatedBigUnsafe(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		panic(err)
 	}
 	msg := &BigUnsafe{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		panic(err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -589,12 +589,12 @@ func TestBigUnsafeVerboseEqual(t *testing.T) {
 func TestSubVerboseEqual(t *testing.T) {
 	popr := math_rand.New(math_rand.NewSource(time.Now().UnixNano()))
 	p := NewPopulatedSub(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		panic(err)
 	}
 	msg := &Sub{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		panic(err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -604,12 +604,12 @@ func TestSubVerboseEqual(t *testing.T) {
 func TestIntMergeVerboseEqual(t *testing.T) {
 	popr := math_rand.New(math_rand.NewSource(time.Now().UnixNano()))
 	p := NewPopulatedIntMerge(popr, false)
-	dAtA, err := github_com_gogo_protobuf_proto.Marshal(p)
+	dAtA, err := github_com_vaniila_protobuf_proto.Marshal(p)
 	if err != nil {
 		panic(err)
 	}
 	msg := &IntMerge{}
-	if err := github_com_gogo_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
+	if err := github_com_vaniila_protobuf_proto.Unmarshal(dAtA, msg); err != nil {
 		panic(err)
 	}
 	if err := p.VerboseEqual(msg); err != nil {
@@ -705,4 +705,4 @@ func TestIntMergeStringer(t *testing.T) {
 	}
 }
 
-//These tests are generated by github.com/gogo/protobuf/plugin/testgen
+//These tests are generated by github.com/vaniila/protobuf/plugin/testgen

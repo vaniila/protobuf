@@ -51,8 +51,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gogo/protobuf/proto"
-	"github.com/gogo/protobuf/types"
+	"github.com/vaniila/protobuf/proto"
+	"github.com/vaniila/protobuf/types"
 )
 
 // Marshaler is a configurable object for converting between

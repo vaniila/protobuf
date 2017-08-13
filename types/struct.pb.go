@@ -14,7 +14,7 @@
 */
 package types
 
-import proto "github.com/gogo/protobuf/proto"
+import proto "github.com/vaniila/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
@@ -22,7 +22,7 @@ import strconv "strconv"
 
 import strings "strings"
 import reflect "reflect"
-import github_com_gogo_protobuf_sortkeys "github.com/gogo/protobuf/sortkeys"
+import github_com_vaniila_protobuf_sortkeys "github.com/vaniila/protobuf/sortkeys"
 
 import io "io"
 
@@ -653,7 +653,7 @@ func (this *Struct) GoString() string {
 	for k := range this.Fields {
 		keysForFields = append(keysForFields, k)
 	}
-	github_com_gogo_protobuf_sortkeys.Strings(keysForFields)
+	github_com_vaniila_protobuf_sortkeys.Strings(keysForFields)
 	mapStringForFields := "map[string]*Value{"
 	for _, k := range keysForFields {
 		mapStringForFields += fmt.Sprintf("%#v: %#v,", k, this.Fields[k])
@@ -1194,7 +1194,7 @@ func (this *Struct) String() string {
 	for k := range this.Fields {
 		keysForFields = append(keysForFields, k)
 	}
-	github_com_gogo_protobuf_sortkeys.Strings(keysForFields)
+	github_com_vaniila_protobuf_sortkeys.Strings(keysForFields)
 	mapStringForFields := "map[string]*Value{"
 	for _, k := range keysForFields {
 		mapStringForFields += fmt.Sprintf("%v: %v,", k, this.Fields[k])

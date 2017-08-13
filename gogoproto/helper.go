@@ -1,7 +1,7 @@
 // Protocol Buffers for Go with Gadgets
 //
 // Copyright (c) 2013, The GoGo Authors. All rights reserved.
-// http://github.com/gogo/protobuf
+// http://github.com/vaniila/protobuf
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -28,8 +28,8 @@
 
 package gogoproto
 
-import google_protobuf "github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
-import proto "github.com/gogo/protobuf/proto"
+import google_protobuf "github.com/vaniila/protobuf/protoc-gen-gogo/descriptor"
+import proto "github.com/vaniila/protobuf/proto"
 
 func IsEmbed(field *google_protobuf.FieldDescriptorProto) bool {
 	return proto.GetBoolExtension(field.Options, E_Embed, false)
@@ -239,6 +239,16 @@ func GetMoreTags(field *google_protobuf.FieldDescriptorProto) *string {
 	return nil
 }
 
+func GetRequiredField(message *google_protobuf.DescriptorProto) bool {
+	if message.Options != nil {
+		v, err := proto.GetExtension(message.Options, E_Required)
+		if err == nil && v.(*bool) != nil {
+			return (*v.(*bool))
+		}
+	}
+	return false
+}
+
 type EnableFunc func(file *google_protobuf.FileDescriptorProto, message *google_protobuf.DescriptorProto) bool
 
 func EnabledGoEnumPrefix(file *google_protobuf.FileDescriptorProto, enum *google_protobuf.EnumDescriptorProto) bool {
@@ -350,6 +360,20 @@ func ImportsGoGoProto(file *google_protobuf.FileDescriptorProto) bool {
 
 func HasCompare(file *google_protobuf.FileDescriptorProto, message *google_protobuf.DescriptorProto) bool {
 	return proto.GetBoolExtension(message.Options, E_Compare, proto.GetBoolExtension(file.Options, E_CompareAll, false))
+}
+
+func HasGraphQL(file *google_protobuf.FileDescriptorProto) bool {
+	if file.Options != nil {
+		v, err := proto.GetExtension(file.Options, E_GraphqlAll)
+		if err == nil && v.(*bool) != nil {
+			return (*v.(*bool))
+		}
+	}
+	return false
+}
+
+func HasBitflags(file *google_protobuf.FileDescriptorProto, message *google_protobuf.DescriptorProto) bool {
+	return proto.GetBoolExtension(message.Options, E_Bitflags, false)
 }
 
 func RegistersGolangProto(file *google_protobuf.FileDescriptorProto) bool {
