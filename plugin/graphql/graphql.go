@@ -277,14 +277,15 @@ func (p *graphql) graphQLType(message *generator.Descriptor, field *descriptor.F
 	case descriptor.FieldDescriptorProto_TYPE_ENUM:
 		panic("mapping a proto enum type to graphql is unimplemented")
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-		// TODO: fix this to be more robust about imported objects
 		mobj := p.ObjectNamed(field.GetTypeName())
-		// fmt.Fprint(os.Stderr, mobj.PackageName())
+		if gogoproto.IsStdTime(field) {
+			gqltype = fmt.Sprint(schemaPkgName.Use(), ".", "Timestamp")
+			break
+		}
 		if strings.HasPrefix(mobj.PackageName(), types) {
 			gqltype = fmt.Sprint(schemaPkgName.Use(), ".", generator.CamelCaseSlice(mobj.TypeName()))
 			break
 		}
-
 		gqltype = p.graphQLTypeVarName(mobj)
 	case descriptor.FieldDescriptorProto_TYPE_BYTES:
 		gqltype = fmt.Sprint(schemaPkgName.Use(), ".", "ByteString")
