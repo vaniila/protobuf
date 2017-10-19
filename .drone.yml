@@ -24,7 +24,7 @@ pipeline:
       - make
 
   triggle-build-protoc:
-    image: delfer/drone-downstream
+    image: plugins/downstream
     repositories:
       - vaniila/protoc@master
     fork: true
