@@ -5,14 +5,11 @@ workspace:
 pipeline:
 
   build-protobuf:
-    image: alpine:latest
-    environment:
-      - GOPATH=/go
+    image: golang:${GO_VERSION}
     commands:
-      - export PATH=$GOPATH/bin:$PATH
-      - apk --no-cache add --virtual .pb-build ca-certificates make cmake autoconf automake curl tar libtool libc-dev g++ go git protobuf
-      - go get -v google.golang.org/grpc
-      - go get -v github.com/graphql-go/graphql
+      - apt-get update
+      - apt-get install protobuf-compiler -y
+      - go get -v ./...
       - make
 
   triggle-build-protoc:
@@ -21,3 +18,11 @@ pipeline:
     repositories:
       - vaniila/protoc
     secrets: [ downstream_server, downstream_token ]
+    when:
+      matrix:
+        GO_VERSION: 1.9
+
+matrix:
+  GO_VERSION:
+    - 1.9
+    - 1.8
