@@ -12,6 +12,7 @@ pipeline:
       - export PATH=$GOPATH/bin:$PATH
       - apk --no-cache add --virtual .pb-build ca-certificates make cmake autoconf automake curl tar libtool libc-dev g++ go git protobuf
       - go get -v google.golang.org/grpc
+      - go get -v github.com/graphql-go/graphql
       - make
 
   triggle-build-protoc:
