@@ -24,9 +24,10 @@ pipeline:
       - make
 
   triggle-build-protoc:
-    image: plugins/downstream
+    image: delfer/drone-downstream
     repositories:
-      - vaniila/protoc
+      - vaniila/protoc@master
+    fork: true
     secrets: [ downstream_server, downstream_token ]
     when:
       matrix:
