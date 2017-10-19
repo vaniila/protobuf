@@ -7,14 +7,24 @@ pipeline:
   build-protobuf:
     image: golang:${GO_VERSION}
     commands:
+      # install unzip
       - apt-get update
-      - apt-get install protobuf-compiler -y
+      - apt-get install --yes unzip
+      # download protoc
+      - mkdir -p protoc
+      - wget https://github.com/google/protobuf/releases/download/v3.2.0/protoc-3.2.0-linux-x86_64.zip -O protoc/protoc.zip
+      - unzip protoc/protoc.zip -d protoc/pre
+      # install protoc
+      - mv protoc/pre/bin/* /usr/local/bin/
+      - mv protoc/pre/include/* /usr/local/include/
+      # clean up
+      - rm -rf protoc
+      # build go protobuf
       - go get -v ./...
       - make
 
   triggle-build-protoc:
     image: plugins/downstream
-    fork: true
     repositories:
       - vaniila/protoc
     secrets: [ downstream_server, downstream_token ]
