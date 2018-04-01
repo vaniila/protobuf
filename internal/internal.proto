@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package internal;
+
+import "github.com/vaniila/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) =  true;
+option (gogoproto.goproto_getters_all) = true;
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_unrecognized_all) = false;
+option (gogoproto.testgen_all) = true;
+option (gogoproto.benchgen_all) = true;
+
+enum ErrorType {
+    option (gogoproto.goproto_enum_prefix) = false;
+    Unknown = 0 [(gogoproto.enumvalue_customname) = "Unknown"];
+    System = 1 [(gogoproto.enumvalue_customname) = "System"];
+    Client = 2 [(gogoproto.enumvalue_customname) = "Client"];
+}
+
+message Error {
+    string cause = 1;
+    ErrorType type = 2;
+}
+
+message ExtendedRequest {
+    map<string, string> request_metadata = 1;
+    bool option_error_if_null = 10;
+    bool option_error_if_zero = 11;
+}
+
+message ExtendedResponse {
+    Error error = 10;
+}
+
