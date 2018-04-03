@@ -318,6 +318,8 @@ func (p *unmarshal) declareMapField(varName string, nullable bool, customType bo
 			p.P(varName, ` := new(time.Time)`)
 		} else if gogoproto.IsStdDuration(field) {
 			p.P(varName, ` := new(time.Duration)`)
+		} else if gogoproto.IsStdError(field) {
+			p.P(`var `, varName, ` error`)
 		} else {
 			desc := p.ObjectNamed(field.GetTypeName())
 			msgname := p.TypeName(desc)
@@ -421,6 +423,8 @@ func (p *unmarshal) mapField(varName string, customType bool, field *descriptor.
 			p.P(`if err := `, p.typesPkg.Use(), `.StdTimeUnmarshal(`, varName, `, `, buf, `); err != nil {`)
 		} else if gogoproto.IsStdDuration(field) {
 			p.P(`if err := `, p.typesPkg.Use(), `.StdDurationUnmarshal(`, varName, `, `, buf, `); err != nil {`)
+		} else if gogoproto.IsStdError(field) {
+			p.P(`if err := `, p.typesPkg.Use(), `.StdErrorUnmarshal(`, varName, `, `, buf, `); err != nil {`)
 		} else {
 			desc := p.ObjectNamed(field.GetTypeName())
 			msgname := p.TypeName(desc)
@@ -758,6 +762,14 @@ func (p *unmarshal) field(file *generator.FileDescriptor, msg *generator.Descrip
 					p.P(`v := time.Duration(0)`)
 					p.P(`if err := `, p.typesPkg.Use(), `.StdDurationUnmarshal(&v, `, buf, `); err != nil {`)
 				}
+			} else if gogoproto.IsStdError(field) {
+				if nullable {
+					p.P(`var v error`)
+					p.P(`if err := `, p.typesPkg.Use(), `.StdErrorUnmarshal(v, `, buf, `); err != nil {`)
+				} else {
+					p.P(`var v error`)
+					p.P(`if err := `, p.typesPkg.Use(), `.StdErrorUnmarshal(&v, `, buf, `); err != nil {`)
+				}
 			} else {
 				p.P(`v := &`, msgname, `{}`)
 				p.P(`if err := v.Unmarshal(`, buf, `); err != nil {`)
@@ -789,7 +801,7 @@ func (p *unmarshal) field(file *generator.FileDescriptor, msg *generator.Descrip
 			}
 
 			nullable, valuegoTyp, valuegoAliasTyp = generator.GoMapValueTypes(field, m.ValueField, valuegoTyp, valuegoAliasTyp)
-			if gogoproto.IsStdTime(field) || gogoproto.IsStdDuration(field) {
+			if gogoproto.IsStdTime(field) || gogoproto.IsStdDuration(field) || gogoproto.IsStdError(field) {
 				valuegoTyp = valuegoAliasTyp
 			}
 
@@ -872,6 +884,12 @@ func (p *unmarshal) field(file *generator.FileDescriptor, msg *generator.Descrip
 				} else {
 					p.P(`m.`, fieldname, ` = append(m.`, fieldname, `, time.Duration(0))`)
 				}
+			} else if gogoproto.IsStdError(field) {
+				if nullable {
+					p.P(`m.`, fieldname, ` = append(m.`, fieldname, `, nil)`)
+				} else {
+					p.P(`m.`, fieldname, ` = append(m.`, fieldname, `, nil)`)
+				}
 			} else if nullable && !gogoproto.IsCustomType(field) {
 				p.P(`m.`, fieldname, ` = append(m.`, fieldname, `, &`, msgname, `{})`)
 			} else {
@@ -893,6 +911,12 @@ func (p *unmarshal) field(file *generator.FileDescriptor, msg *generator.Descrip
 					p.P(`if err := `, p.typesPkg.Use(), `.StdDurationUnmarshal(`, varName, `,`, buf, `); err != nil {`)
 				} else {
 					p.P(`if err := `, p.typesPkg.Use(), `.StdDurationUnmarshal(&(`, varName, `),`, buf, `); err != nil {`)
+				}
+			} else if gogoproto.IsStdError(field) {
+				if nullable {
+					p.P(`if err := `, p.typesPkg.Use(), `.StdErrorUnmarshal(`, varName, `,`, buf, `); err != nil {`)
+				} else {
+					p.P(`if err := `, p.typesPkg.Use(), `.StdErrorUnmarshal(&(`, varName, `),`, buf, `); err != nil {`)
 				}
 			} else {
 				p.P(`if err := `, varName, `.Unmarshal(`, buf, `); err != nil {`)
@@ -919,6 +943,8 @@ func (p *unmarshal) field(file *generator.FileDescriptor, msg *generator.Descrip
 				p.P(`if err := `, p.typesPkg.Use(), `.StdTimeUnmarshal(m.`, fieldname, `, dAtA[iNdEx:postIndex]); err != nil {`)
 			} else if gogoproto.IsStdDuration(field) {
 				p.P(`if err := `, p.typesPkg.Use(), `.StdDurationUnmarshal(m.`, fieldname, `, dAtA[iNdEx:postIndex]); err != nil {`)
+			} else if gogoproto.IsStdError(field) {
+				p.P(`if err := `, p.typesPkg.Use(), `.StdErrorUnmarshal(m.`, fieldname, `, dAtA[iNdEx:postIndex]); err != nil {`)
 			} else {
 				p.P(`if err := m.`, fieldname, `.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {`)
 			}
@@ -931,6 +957,8 @@ func (p *unmarshal) field(file *generator.FileDescriptor, msg *generator.Descrip
 				p.P(`if err := `, p.typesPkg.Use(), `.StdTimeUnmarshal(&m.`, fieldname, `, dAtA[iNdEx:postIndex]); err != nil {`)
 			} else if gogoproto.IsStdDuration(field) {
 				p.P(`if err := `, p.typesPkg.Use(), `.StdDurationUnmarshal(&m.`, fieldname, `, dAtA[iNdEx:postIndex]); err != nil {`)
+			} else if gogoproto.IsStdError(field) {
+				p.P(`if err := `, p.typesPkg.Use(), `.StdErrorUnmarshal(&m.`, fieldname, `, dAtA[iNdEx:postIndex]); err != nil {`)
 			} else {
 				p.P(`if err := m.`, fieldname, `.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {`)
 			}

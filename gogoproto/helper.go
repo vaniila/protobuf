@@ -47,6 +47,10 @@ func IsStdDuration(field *google_protobuf.FieldDescriptorProto) bool {
 	return proto.GetBoolExtension(field.Options, E_Stdduration, false)
 }
 
+func IsStdError(field *google_protobuf.FieldDescriptorProto) bool {
+	return proto.GetBoolExtension(field.Options, E_Stderror, false)
+}
+
 func NeedsNilCheck(proto3 bool, field *google_protobuf.FieldDescriptorProto) bool {
 	nullable := IsNullable(field)
 	if field.IsMessage() || IsCustomType(field) {

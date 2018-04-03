@@ -1765,6 +1765,10 @@ func (g *Generator) goTag(message *Descriptor, field *descriptor.FieldDescriptor
 	if gogoproto.IsStdDuration(field) {
 		stdduration = ",stdduration"
 	}
+	stderror := ""
+	if gogoproto.IsStdError(field) {
+		stderror = ",stderror"
+	}
 	return strconv.Quote(fmt.Sprintf("%s,%d,%s%s%s%s%s%s%s%s%s%s%s%s%s",
 		wiretype,
 		field.GetNumber(),
@@ -1780,7 +1784,8 @@ func (g *Generator) goTag(message *Descriptor, field *descriptor.FieldDescriptor
 		castkey,
 		castvalue,
 		stdtime,
-		stdduration))
+		stdduration,
+		stderror))
 }
 
 func needsStar(field *descriptor.FieldDescriptorProto, proto3 bool, allowOneOf bool) bool {
@@ -1899,6 +1904,8 @@ func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescripto
 	case gogoproto.IsStdDuration(field):
 		g.customImports = append(g.customImports, "time")
 		typ = "time.Duration"
+	case gogoproto.IsStdError(field):
+		typ = "error"
 	}
 	if needsStar(field, g.file.proto3 && field.Extendee == nil, message != nil && message.allowOneof()) {
 		typ = "*" + typ
@@ -1971,7 +1978,7 @@ func (g *Generator) GoMapType(d *Descriptor, field *descriptor.FieldDescriptorPr
 		if !gogoproto.IsNullable(m.ValueAliasField) {
 			valType = strings.TrimPrefix(valType, "*")
 		}
-		if !gogoproto.IsStdTime(field) && !gogoproto.IsStdDuration(field) {
+		if !gogoproto.IsStdTime(field) && !gogoproto.IsStdDuration(field) && !gogoproto.IsStdError(field) {
 			g.RecordTypeUse(m.ValueAliasField.GetTypeName())
 		}
 	default:
@@ -2194,7 +2201,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 
 			g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
 			g.P(fieldName, "\t", typename, "\t`", tag, "`")
-			if !gogoproto.IsStdTime(field) && !gogoproto.IsStdDuration(field) {
+			if !gogoproto.IsStdTime(field) && !gogoproto.IsStdDuration(field) && !gogoproto.IsStdError(field) {
 				g.RecordTypeUse(field.GetTypeName())
 			}
 		}
@@ -2426,7 +2433,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			_, wiretype := g.GoType(message, field)
 			tag := "protobuf:" + g.goTag(message, field, wiretype)
 			g.P("type ", oneofTypeName[field], " struct{ ", fieldNames[field], " ", fieldTypes[field], " `", tag, "` }")
-			if !gogoproto.IsStdTime(field) && !gogoproto.IsStdDuration(field) {
+			if !gogoproto.IsStdTime(field) && !gogoproto.IsStdDuration(field) && !gogoproto.IsStdError(field) {
 				g.RecordTypeUse(field.GetTypeName())
 			}
 		}
@@ -2569,7 +2576,9 @@ func (g *Generator) generateMessage(message *Descriptor) {
 				} else {
 					goTyp, _ := g.GoType(message, field)
 					goTypName := GoTypeToName(goTyp)
-					if !gogoproto.IsNullable(field) && gogoproto.IsStdDuration(field) {
+					if gogoproto.IsStdError(field) {
+						g.P("return nil")
+					} else if !gogoproto.IsNullable(field) && gogoproto.IsStdDuration(field) {
 						g.P("return 0")
 					} else {
 						g.P("return ", goTypName, "{}")
@@ -2765,6 +2774,20 @@ func (g *Generator) generateMessage(message *Descriptor) {
 					g.P(`}`)
 					val = "dAtA"
 					pre, post = "b.EncodeRawBytes(", ")"
+				} else if gogoproto.IsStdError(field) {
+					pkg := g.useTypes()
+					if gogoproto.IsNullable(field) {
+						g.P(`dAtA, err := `, pkg, `.StdErrorMarshal(*`, val, `)`)
+					} else {
+						g.P(`dAtA, err := `, pkg, `.StdErrorMarshal(`, val, `)`)
+					}
+					g.P(`if err != nil {`)
+					g.In()
+					g.P(`return err`)
+					g.Out()
+					g.P(`}`)
+					val = "dAtA"
+					pre, post = "b.EncodeRawBytes(", ")"
 				}
 				if !canFail {
 					g.P("_ = ", pre, val, post)
@@ -2828,7 +2851,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 				dec = "b.DecodeGroup(msg)"
 				// handled specially below
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				if gogoproto.IsStdTime(field) || gogoproto.IsStdDuration(field) {
+				if gogoproto.IsStdTime(field) || gogoproto.IsStdDuration(field) || gogoproto.IsStdError(field) {
 					dec = "b.DecodeRawBytes(true)"
 				} else {
 					g.P("msg := new(", fieldTypes[field][1:], ")") // drop star
@@ -2897,6 +2920,20 @@ func (g *Generator) generateMessage(message *Descriptor) {
 				g.Out()
 				g.P(`}`)
 				val = "c"
+			} else if gogoproto.IsStdError(field) {
+				pkg := g.useTypes()
+				g.P(`if err != nil {`)
+				g.In()
+				g.P(`return true, err`)
+				g.Out()
+				g.P(`}`)
+				g.P(`var c error`)
+				g.P(`if err2 := `, pkg, `.StdErrorUnmarshal(&c, `, val, `); err2 != nil {`)
+				g.In()
+				g.P(`return true, err`)
+				g.Out()
+				g.P(`}`)
+				val = "c"
 			}
 			if cast != "" {
 				val = cast + "(" + val + ")"
@@ -2909,7 +2946,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 				val += " != 0"
 			case descriptor.FieldDescriptorProto_TYPE_GROUP,
 				descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				if !gogoproto.IsStdTime(field) && !gogoproto.IsStdDuration(field) {
+				if !gogoproto.IsStdTime(field) && !gogoproto.IsStdDuration(field) && !gogoproto.IsStdError(field) {
 					val = "msg"
 				}
 			}
@@ -2988,6 +3025,12 @@ func (g *Generator) generateMessage(message *Descriptor) {
 						}
 						pkg := g.useTypes()
 						g.P("s := ", pkg, ".SizeOfStdDuration(", val, ")")
+					} else if gogoproto.IsStdError(field) {
+						if gogoproto.IsNullable(field) {
+							val = "*" + val
+						}
+						pkg := g.useTypes()
+						g.P("s := ", pkg, ".SizeOfStdError(", val, ")")
 					} else {
 						g.P("s := ", g.Pkg["proto"], ".Size(", val, ")")
 					}

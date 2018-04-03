@@ -133,6 +133,7 @@ extend google.protobuf.FieldOptions {
 
 	optional bool stdtime = 65010;
 	optional bool stdduration = 65011;
+	optional bool stderror = 65012;
 
-	optional bool required = 65012;
+	optional bool required = 65013;
 }

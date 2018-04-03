@@ -308,6 +308,7 @@ func (p *plugin) generateField(file *generator.FileDescriptor, message *generato
 	nullable := gogoproto.IsNullable(field)
 	isDuration := gogoproto.IsStdDuration(field)
 	isTimestamp := gogoproto.IsStdTime(field)
+	isError := gogoproto.IsStdError(field)
 	// oneof := field.OneofIndex != nil
 	if !repeated {
 		if ctype || isTimestamp {
@@ -337,6 +338,20 @@ func (p *plugin) generateField(file *generator.FileDescriptor, message *generato
 			p.Out()
 			p.P(`}`)
 		} else if isDuration {
+			if nullable {
+				p.generateNullableField(fieldname, verbose)
+			} else {
+				p.P(`if this.`, fieldname, ` != that1.`, fieldname, `{`)
+			}
+			p.In()
+			if verbose {
+				p.P(`return `, p.fmtPkg.Use(), `.Errorf("`, fieldname, ` this(%v) Not Equal that(%v)", this.`, fieldname, `, that1.`, fieldname, `)`)
+			} else {
+				p.P(`return false`)
+			}
+			p.Out()
+			p.P(`}`)
+		} else if isError {
 			if nullable {
 				p.generateNullableField(fieldname, verbose)
 			} else {
