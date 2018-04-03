@@ -215,6 +215,12 @@ func (p *size) std(field *descriptor.FieldDescriptorProto, name string) (string,
 		} else {
 			return p.typesPkg.Use() + `.SizeOfStdDuration(` + name + `)`, true
 		}
+	} else if gogoproto.IsStdError(field) {
+		if gogoproto.IsNullable(field) {
+			return p.typesPkg.Use() + `.SizeOfStdError(*` + name + `)`, true
+		} else {
+			return p.typesPkg.Use() + `.SizeOfStdError(` + name + `)`, true
+		}
 	}
 	return "", false
 }

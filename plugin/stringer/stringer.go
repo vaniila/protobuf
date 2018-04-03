@@ -93,9 +93,10 @@ not print their values, while the generated String method will always print all 
 package stringer
 
 import (
+	"strings"
+
 	"github.com/vaniila/protobuf/gogoproto"
 	"github.com/vaniila/protobuf/protoc-gen-gogo/generator"
-	"strings"
 )
 
 type stringer struct {
@@ -212,6 +213,8 @@ func (p *stringer) Generate(file *generator.FileDescriptor) {
 					p.P("`", fieldname, ":`", ` + `, stringsPkg.Use(), `.Replace(`, fmtPkg.Use(), `.Sprintf("%v", this.`, fieldname, `), "`, typeName, `","`, msgname, `"`, ", 1) + `,", "`,")
 				} else if repeated {
 					p.P("`", fieldname, ":`", ` + `, stringsPkg.Use(), `.Replace(`, stringsPkg.Use(), `.Replace(`, fmtPkg.Use(), `.Sprintf("%v", this.`, fieldname, `), "`, typeName, `","`, msgname, `"`, ", 1),`&`,``,1) + `,", "`,")
+				} else if gogoproto.IsStdError(field) {
+					p.P("`", fieldname, ":`", ` + `, fmtPkg.Use(), `.Sprintf("%v", this.`, fieldname, ") + `,", "`,")
 				} else {
 					p.P("`", fieldname, ":`", ` + `, stringsPkg.Use(), `.Replace(`, stringsPkg.Use(), `.Replace(this.`, fieldname, `.String(), "`, typeName, `","`, msgname, `"`, ", 1),`&`,``,1) + `,", "`,")
 				}

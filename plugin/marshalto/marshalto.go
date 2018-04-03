@@ -365,6 +365,9 @@ func (p *marshalto) mapField(numGen NumGen, field *descriptor.FieldDescriptorPro
 		} else if gogoproto.IsStdDuration(field) {
 			p.callVarint(p.typesPkg.Use(), `.SizeOfStdDuration(*`, varName, `)`)
 			p.P(`n`, numGen.Next(), `, err := `, p.typesPkg.Use(), `.StdDurationMarshalTo(*`, varName, `, dAtA[i:])`)
+		} else if gogoproto.IsStdError(field) {
+			p.callVarint(p.typesPkg.Use(), `.SizeOfStdError(*`, varName, `)`)
+			p.P(`n`, numGen.Next(), `, err := `, p.typesPkg.Use(), `.StdErrorMarshalTo(*`, varName, `, dAtA[i:])`)
 		} else if protoSizer {
 			p.callVarint(varName, `.ProtoSize()`)
 			p.P(`n`, numGen.Next(), `, err := `, varName, `.MarshalTo(dAtA[i:])`)
@@ -964,7 +967,8 @@ func (p *marshalto) generateField(proto3 bool, numGen NumGen, file *generator.Fi
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 				if valuegoTyp != valuegoAliasTyp &&
 					!gogoproto.IsStdTime(field) &&
-					!gogoproto.IsStdDuration(field) {
+					!gogoproto.IsStdDuration(field) &&
+					!gogoproto.IsStdError(field) {
 					if nullable {
 						// cast back to the type that has the generated methods on it
 						accessor = `((` + valuegoTyp + `)(` + accessor + `))`
@@ -981,6 +985,8 @@ func (p *marshalto) generateField(proto3 bool, numGen NumGen, file *generator.Fi
 					p.P(`msgSize = `, p.typesPkg.Use(), `.SizeOfStdTime(*`, accessor, `)`)
 				} else if gogoproto.IsStdDuration(field) {
 					p.P(`msgSize = `, p.typesPkg.Use(), `.SizeOfStdDuration(*`, accessor, `)`)
+				} else if gogoproto.IsStdError(field) {
+					p.P(`msgSize = `, p.typesPkg.Use(), `.SizeOfStdError(*`, accessor, `)`)
 				} else if protoSizer {
 					p.P(`msgSize = `, accessor, `.ProtoSize()`)
 				} else {
@@ -1034,6 +1040,12 @@ func (p *marshalto) generateField(proto3 bool, numGen NumGen, file *generator.Fi
 				}
 				p.callVarint(p.typesPkg.Use(), `.SizeOfStdDuration(`, varName, `)`)
 				p.P(`n, err := `, p.typesPkg.Use(), `.StdDurationMarshalTo(`, varName, `, dAtA[i:])`)
+			} else if gogoproto.IsStdError(field) {
+				if gogoproto.IsNullable(field) {
+					varName = "*" + varName
+				}
+				p.callVarint(p.typesPkg.Use(), `.SizeOfStdError(`, varName, `)`)
+				p.P(`n, err := `, p.typesPkg.Use(), `.StdErrorMarshalTo(`, varName, `, dAtA[i:])`)
 			} else if protoSizer {
 				p.callVarint(varName, ".ProtoSize()")
 				p.P(`n, err := `, varName, `.MarshalTo(dAtA[i:])`)
@@ -1064,6 +1076,12 @@ func (p *marshalto) generateField(proto3 bool, numGen NumGen, file *generator.Fi
 				}
 				p.callVarint(p.typesPkg.Use(), `.SizeOfStdDuration(`, varName, `)`)
 				p.P(`n`, numGen.Next(), `, err := `, p.typesPkg.Use(), `.StdDurationMarshalTo(`, varName, `, dAtA[i:])`)
+			} else if gogoproto.IsStdError(field) {
+				if gogoproto.IsNullable(field) {
+					varName = "*" + varName
+				}
+				p.callVarint(p.typesPkg.Use(), `.SizeOfStdError(`, varName, `)`)
+				p.P(`n`, numGen.Next(), `, err := `, p.typesPkg.Use(), `.StdErrorMarshalTo(`, varName, `, dAtA[i:])`)
 			} else if protoSizer {
 				p.callVarint(varName, `.ProtoSize()`)
 				p.P(`n`, numGen.Next(), `, err := `, varName, `.MarshalTo(dAtA[i:])`)

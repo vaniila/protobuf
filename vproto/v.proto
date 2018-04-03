@@ -12,16 +12,8 @@ option (gogoproto.sizer_all) = true;
 option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_unrecognized_all) = false;
 
-enum ErrorType {
-    option (gogoproto.goproto_enum_prefix) = false;
-    Unknown = 0 [(gogoproto.enumvalue_customname) = "Unknown"];
-    System = 1 [(gogoproto.enumvalue_customname) = "System"];
-    Client = 2 [(gogoproto.enumvalue_customname) = "Client"];
-}
-
 message Error {
     string cause = 1;
-    ErrorType type = 2;
 }
 
 message ExtendedRequest {
@@ -31,6 +23,17 @@ message ExtendedRequest {
 }
 
 message ExtendedResponse {
-    Error error = 10;
+
+    // client error
+    Error error = 1 [(gogoproto.stderror) = true, (gogoproto.nullable) = false];
+
+    // record exists or not exists section
+    bool record_already_exists = 10;
+    bool record_not_found = 11;
+
+    // the number of retrieved entities in this response
+    int64 records_select_count = 20;
+    // the total number of entities
+    int64 records_total_count = 21;
 }
 
