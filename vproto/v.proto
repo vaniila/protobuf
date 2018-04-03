@@ -4,6 +4,14 @@ package vproto;
 
 import "github.com/vaniila/protobuf/gogoproto/gogo.proto";
 
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) =  true;
+option (gogoproto.goproto_getters_all) = true;
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_unrecognized_all) = false;
+
 enum ErrorType {
     option (gogoproto.goproto_enum_prefix) = false;
     Unknown = 0 [(gogoproto.enumvalue_customname) = "Unknown"];
