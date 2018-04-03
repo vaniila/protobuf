@@ -3,7 +3,6 @@ syntax = "proto3";
 package vproto;
 
 import "github.com/vaniila/protobuf/gogoproto/gogo.proto";
-//import "google/protobuf/timestamp.proto";
 
 option (gogoproto.goproto_stringer_all) = false;
 option (gogoproto.stringer_all) =  true;
@@ -33,6 +32,5 @@ message ExtendedRequest {
 
 message ExtendedResponse {
     Error error = 10 [(gogoproto.stderror) = true, (gogoproto.nullable) = false];
-    //google.protobuf.Timestamp datetime = 11 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
 }
 
