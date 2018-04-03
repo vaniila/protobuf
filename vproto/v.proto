@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package internal;
+package vproto;
 
 import "github.com/vaniila/protobuf/gogoproto/gogo.proto";
 

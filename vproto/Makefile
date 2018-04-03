@@ -31,7 +31,7 @@ regenerate:
 	protoc --gogo_out=Mgoogle/protobuf/descriptor.proto=github.com/vaniila/protobuf/protoc-gen-gogo/descriptor:. --proto_path=../../../../:../protobuf/:. *.proto
 
 restore:
-	cp internal.pb.golden internal.pb.go
+	cp v.pb.golden v.pb.go
 
 preserve:
-	cp internal.pb.go internal.pb.golden
+	cp v.pb.go v.pb.golden
