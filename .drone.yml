@@ -5,15 +5,35 @@ workspace:
 pipeline:
 
   build-protobuf:
-    image: alpine:latest
+    image: golang:${GO_VERSION}
     commands:
-      - apk --no-cache add --virtual .pb-build ca-certificates make cmake autoconf automake curl tar libtool libc-dev g++ go git protobuf
-      - go get -v google.golang.org/grpc
+      # install unzip
+      - apt-get update
+      - apt-get install --yes unzip
+      # download protoc
+      - mkdir -p protoc
+      - wget https://github.com/google/protobuf/releases/download/v3.2.0/protoc-3.2.0-linux-x86_64.zip -O protoc/protoc.zip
+      - unzip protoc/protoc.zip -d protoc/pre
+      # install protoc
+      - mv protoc/pre/bin/* /usr/local/bin/
+      - mv protoc/pre/include/* /usr/local/include/
+      # clean up
+      - rm -rf protoc
+      # build go protobuf
+      - go get -v ./...
       - make
 
   triggle-build-protoc:
     image: plugins/downstream
-    fork: true
     repositories:
-      - vaniila/protoc
+      - vaniila/protoc@master
+    fork: true
     secrets: [ downstream_server, downstream_token ]
+    when:
+      matrix:
+        GO_VERSION: 1.9
+
+matrix:
+  GO_VERSION:
+    - 1.9
+    - 1.8
