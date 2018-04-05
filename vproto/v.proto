@@ -27,6 +27,9 @@ message ExtendedResponse {
     // client error
     Error error = 1 [(gogoproto.stderror) = true, (gogoproto.nullable) = false];
 
+    // parameter validation status
+    bool request_input_invalid = 5;
+
     // record exists or not exists section
     bool record_already_exists = 10;
     bool record_not_found = 11;
